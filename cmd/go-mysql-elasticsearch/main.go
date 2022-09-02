@@ -9,10 +9,10 @@ import (
 
 	"github.com/juju/errors"
 	"github.com/siddontang/go-log/log"
-	"github.com/siddontang/go-mysql-elasticsearch/river"
+	"github.com/go-mysql-org/go-mysql-elasticsearch/river"
 )
 
-var configFile = flag.String("config", "./etc/river.toml", "go-mysql-elasticsearch config file")
+var configFile = flag.String("config", "/etc/river.toml", "go-mysql-elasticsearch config file")
 var my_addr = flag.String("my_addr", "", "MySQL addr")
 var my_user = flag.String("my_user", "", "MySQL user")
 var my_pass = flag.String("my_pass", "", "MySQL password")

@@ -1,0 +1,14 @@
+FROM golang:alpine
+
+MAINTAINER go-mysql-org
+
+RUN apk add --no-cache tini mysql-client
+
+ADD . /go/src/github.com/go-mysql-org/go-mysql-elasticsearch
+
+RUN apk add --no-cache mysql-client
+RUN cd /go/src/github.com/go-mysql-org/go-mysql-elasticsearch/ && \
+    go build -o bin/go-mysql-elasticsearch ./cmd/go-mysql-elasticsearch && \
+    cp -f ./bin/go-mysql-elasticsearch /go/bin/go-mysql-elasticsearch
+
+ENTRYPOINT ["/sbin/tini","--","go-mysql-elasticsearch"]
