@@ -7,10 +7,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/juju/errors"
-	"github.com/siddontang/go-log/log"
 	"github.com/go-mysql-org/go-mysql-elasticsearch/elastic"
 	"github.com/go-mysql-org/go-mysql/canal"
+	"github.com/juju/errors"
+	"github.com/siddontang/go-log/log"
 )
 
 // ErrRuleNotExist is the error if rule is not defined.
@@ -93,6 +93,8 @@ func (r *River) newCanal() error {
 	cfg.Dump.ExecutionPath = r.c.DumpExec
 	cfg.Dump.DiscardErr = false
 	cfg.Dump.SkipMasterData = r.c.SkipMasterData
+
+	cfg.Dump.ExtraOptions = []string{"--ssl-mode=DISABLED"}
 
 	for _, s := range r.c.Sources {
 		for _, t := range s.Tables {

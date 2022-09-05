@@ -1,0 +1,61 @@
+services:
+  mysql:
+    hostname: mysql
+    image: mysql:5.7.26
+    container_name: mysql # 指定容器名称，如果不设置此参数，则由系统自动生成
+    restart: always # 设置容器自启模式
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci # 设置utf8字符集
+    environment:
+      - TZ=UTC # 设置容器时区与宿主机保持一致
+      - MYSQL_ROOT_PASSWORD=root # 设置root密码
+      - MYSQL_DATABASE=test
+    volumes:
+#      - /etc/localtime:/etc/localtime:ro # 设置容器时区与宿主机保持一致
+      # - ./data/mysql:/var/lib/mysql/data # 映射数据库保存目录到宿主机，防止数据丢失
+      - ./etc/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    ports:
+      - "3306:3306"
+    privileged: true
+    networks:
+      - gme
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0 #elasticsearch:7.9.3
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+      - 9010:9010
+    # volumes:
+      # - ./data/es:/usr/share/elasticsearch/data
+    networks:
+      - gme
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms4G -Xmx4G -XX:+StartAttachListener -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.0 #kibana:7.9.3
+    container_name: kibana
+    ports:
+      - 5601:5601
+    networks:
+      - gme
+
+  gme:
+    image: hongmin/go-mysql-elasticsearch:0.0.7
+    container_name: gme
+    volumes:
+      - ./etc/river.toml:/etc/river.toml
+      - ./data/gme:/data/go-mysql-elasticsearch
+    networks:
+      - gme
+
+  pbox:
+    image: hongmin/python-box
+    container_name: python-box
+    networks:
+      - gme
+
+networks:
+  gme:
