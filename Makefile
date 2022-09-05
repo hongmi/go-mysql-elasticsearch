@@ -11,3 +11,6 @@ test:
 clean:
 	GO111MODULE=on go clean -i ./...
 	@rm -rf bin
+
+docker:
+	docker build -t hongmin/go-mysql-elasticsearch:0.0.8 .

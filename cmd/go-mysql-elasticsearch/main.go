@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"syscall"
 
+	"github.com/go-mysql-org/go-mysql-elasticsearch/river"
 	"github.com/juju/errors"
 	"github.com/siddontang/go-log/log"
-	"github.com/go-mysql-org/go-mysql-elasticsearch/river"
 )
 
 var configFile = flag.String("config", "/etc/river.toml", "go-mysql-elasticsearch config file")
@@ -22,6 +22,9 @@ var server_id = flag.Int("server_id", 0, "MySQL server id, as a pseudo slave")
 var flavor = flag.String("flavor", "", "flavor: mysql or mariadb")
 var execution = flag.String("exec", "", "mysqldump execution path")
 var logLevel = flag.String("log_level", "info", "log level")
+
+var env_my_pass = os.Getenv("MYSQL_PASSWORD")
+var env_es_pass = os.Getenv("ES_PASSWORD")
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -55,6 +58,9 @@ func main() {
 	if len(*my_pass) > 0 {
 		cfg.MyPassword = *my_pass
 	}
+	if env_my_pass != "" && len(env_my_pass) > 0 {
+		cfg.MyPassword = env_my_pass
+	}
 
 	if *server_id > 0 {
 		cfg.ServerID = uint32(*server_id)
@@ -62,6 +68,10 @@ func main() {
 
 	if len(*es_addr) > 0 {
 		cfg.ESAddr = *es_addr
+	}
+
+	if env_es_pass != "" && len(env_es_pass) > 0 {
+		cfg.ESPassword = env_es_pass
 	}
 
 	if len(*data_dir) > 0 {
