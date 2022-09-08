@@ -1,2 +1,4 @@
 bin
 .idea
+docker/gme/data/mysql/*
+docker/gme/data/gme/*
