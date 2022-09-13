@@ -12,5 +12,11 @@ clean:
 	GO111MODULE=on go clean -i ./...
 	@rm -rf bin
 
-docker:
-	docker build -t hongmin/go-mysql-elasticsearch:0.0.8 .
+
+IMAGE_NAME=hongmin/go-mysql-elasticsearch
+IMAGE_TAG=0.0.9
+
+image:
+	docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+	docker push ${IMAGE_NAME}:${IMAGE_TAG}
+

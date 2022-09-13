@@ -8,6 +8,7 @@ RUN apt install -y dirmngr lsb-release
 
 # before 8.0.28 is 5072E1F5
 RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
+# RUN apt-key adv --keyserver hkp://keys.gnupg.net --recv-keys 3A79BD29
 
 RUN echo "deb http://repo.mysql.com/apt/debian $(lsb_release -sc) mysql-8.0" | \
     tee /etc/apt/sources.list.d/mysql80.list
